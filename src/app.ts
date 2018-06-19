@@ -2,22 +2,50 @@ import createError from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import logger from "morgan";
 import sassMiddleware from "node-sass-middleware";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import mongoose from "mongoose";
+import passport from "passport";
+import connectFlash from "connect-flash";
+
+import secrets from "./utils/secretLoader";
+import {config as authConfig} from "./utils/auth";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 
-var app = express();
+mongoose.connect(secrets.mongoConn);
+
+const app = express();
+authConfig(passport);
+
+const RedisStore = connectRedis(session);
 
 // view engine setup
-app.set('views', path.join(__dirname, "..", "views"));
-app.set('view engine', 'pug');
+app.set("views", path.join(__dirname, "..", "views"));
+app.set("view engine", "pug");
 
-app.use(logger('dev'));
+app.use(cors({
+  origin: secrets.approvedOrigins
+}));
+app.use(logger(secrets.logLevel));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(secrets.cookieSecret, {}));
+app.use(session({
+  store: new RedisStore({
+    url: secrets.redisConn
+  }),
+  resave: false,
+  saveUninitialized: false,
+  secret: secrets.sessionSecret
+}));
+app.use(connectFlash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(sassMiddleware({
   src: path.join(__dirname, "..", "public"),
   dest: path.join(__dirname, "..", "public"),
