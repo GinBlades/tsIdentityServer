@@ -16,6 +16,7 @@ import {config as authConfig} from "./utils/auth";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
+import sessionRouter from "./routes/session";
 
 mongoose.connect(secrets.mongoConn);
 
@@ -49,13 +50,14 @@ app.use(passport.session());
 app.use(sassMiddleware({
   src: path.join(__dirname, "..", "public"),
   dest: path.join(__dirname, "..", "public"),
-  indentedSyntax: true, // true = .sass and false = .scss
+  indentedSyntax: false, // true = .sass and false = .scss
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/sessions", sessionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -5,4 +5,7 @@ body {
 a {
   color: #00B7FF; }
 
+form input {
+  display: block; }
+
 /*# sourceMappingURL=style.css.map */

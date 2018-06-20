@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  h1 Register
+  if errors.length > 0
+    ul
+      each err in errors
+        li= err
+
+  form(action="/sessions/register", method="post")
+    div
+      label Username
+      input(type="text", name="username", autofocus, required, value=user.username)
+    div
+      label Email
+      input(type="email", name="email", required, value=user.email)
+    div
+      label Password
+      input(type="password", name="password", required)
+    div
+      label Password Confirmation
+      input(type="password", name="passwordConfirmation", required)
+    div
+      input(type="submit", value="Register")

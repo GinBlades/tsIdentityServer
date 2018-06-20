@@ -9,7 +9,7 @@ export interface IUserDocument extends Document {
 }
 
 export interface IUserModel extends Model<IUserDocument> {
-    hashPassword(password: string): boolean;
+    hashPassword(password: string): string;
 }
 
 let UserSchema = new mongoose.Schema({
