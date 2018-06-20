@@ -13,9 +13,20 @@ export interface IUserModel extends Model<IUserDocument> {
 }
 
 let UserSchema = new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String
+    username: {
+        type: String,
+        required: true,
+        maxlength: 12
+    },
+    email: {
+        type: String,
+        required: true,
+        maxlength: 32
+    },
+    password: {
+        type: String,
+        required: true
+    }
 });
 
 // TODO: Hash and proper validation of password
@@ -36,6 +47,38 @@ UserSchema.static("hashPassword", async (password: string): Promise<string> => {
     const hashed = await bcrypt.hashSync(password);
     return hashed;
 });
+
+const uniquePropValidation = function (model: Model<any>, prop: string, value: string, respond: Function) {
+    let queryObj: any = {};
+    queryObj[prop] = value;
+    return model.count(queryObj, (err: any, count: number) => {
+        if (err) {
+            respond(false);
+        }
+
+        if (count > 0) {
+            respond(false);
+        }
+
+        respond(true);
+    });
+}
+
+UserSchema.path("username").validate({
+    validator: function (value: string, respond: Function) {
+        return uniquePropValidation(this.model("User"), "username", value, respond);
+    },
+    msg: "Username is not available.",
+    isAsync: true
+});
+
+UserSchema.path("email").validate({
+    validator: function (value: string, respond: Function) {
+        return uniquePropValidation(this.model("User"), "email", value, respond);
+    },
+    msg: "Email already registered.",
+    isAsync: true
+})
 
 const User: IUserModel = mongoose.model<IUserDocument, IUserModel>("User", UserSchema);
 export default User;

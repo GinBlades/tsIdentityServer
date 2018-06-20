@@ -23,9 +23,20 @@ router.post("/register", async (req, res) => {
     let errors = [];
     console.log(req.body);
 
-    for (let reqField of ["email", "username", "password"]) {
-        if (null == req.body[reqField] || req.body[reqField].length === 0) {
-            errors.push([reqField, `${reqField} cannot be blank.`]);
+    let user = new User();
+    user.email = req.body.email;
+    user.username = req.body.username;
+    user.password = await User.hashPassword(req.body.password);
+
+    try {
+        await user.validate();
+    } catch (err) {
+        console.log("Validation errors on:", Object.keys(user.errors));
+    }
+
+    if (null != user.errors) {
+        for (let err in user.errors) {
+            errors.push([err, user.errors[err].message]);
         }
     }
 
@@ -65,10 +76,6 @@ router.post("/register", async (req, res) => {
         });
     }
 
-    let user = new User();
-    user.email = req.body.email;
-    user.username = req.body.username;
-    user.password = await User.hashPassword(req.body.password);
     await user.save();
 
     res.redirect("/");

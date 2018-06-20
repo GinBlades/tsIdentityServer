@@ -10,15 +10,15 @@ block content
   form(action="/sessions/register", method="post")
     div
       label Username
-      input(type="text", name="username", autofocus, required, value=user.username)
+      input(type="text", name="username", autofocus, value=user.username)
     div
       label Email
-      input(type="email", name="email", required, value=user.email)
+      input(type="email", name="email", value=user.email)
     div
       label Password
-      input(type="password", name="password", required)
+      input(type="password", name="password")
     div
       label Password Confirmation
-      input(type="password", name="passwordConfirmation", required)
+      input(type="password", name="passwordConfirmation")
     div
       input(type="submit", value="Register")
