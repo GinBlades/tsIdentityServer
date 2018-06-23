@@ -64,21 +64,5 @@ const uniquePropValidation = function (model: Model<any>, prop: string, value: s
     });
 }
 
-UserSchema.path("username").validate({
-    validator: function (value: string, respond: Function) {
-        return uniquePropValidation(this.model("User"), "username", value, respond);
-    },
-    msg: "Username is not available.",
-    isAsync: true
-});
-
-UserSchema.path("email").validate({
-    validator: function (value: string, respond: Function) {
-        return uniquePropValidation(this.model("User"), "email", value, respond);
-    },
-    msg: "Email already registered.",
-    isAsync: true
-})
-
 const User: IUserModel = mongoose.model<IUserDocument, IUserModel>("User", UserSchema);
 export default User;

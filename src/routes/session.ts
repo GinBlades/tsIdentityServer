@@ -1,6 +1,7 @@
 import express from "express";
 import { localAuth } from "../utils/auth";
 import User from "../models/User";
+import { UserRepository } from "../repositories/userRepository";
 
 const router = express.Router();
 
@@ -20,65 +21,20 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
+    const repo = new UserRepository();
     let errors = [];
-    console.log(req.body);
 
-    let user = new User();
-    user.email = req.body.email;
-    user.username = req.body.username;
-    user.password = await User.hashPassword(req.body.password);
+    let user = repo.fromRequest(req);
+    const repoResult = await repo.create(user, req.body.passwordConfirmation);
 
-    try {
-        await user.validate();
-    } catch (err) {
-        console.log("Validation errors on:", Object.keys(user.errors));
-    }
-
-    if (null != user.errors) {
-        for (let err in user.errors) {
-            errors.push([err, user.errors[err].message]);
-        }
-    }
-
-    if (null == errors.find(err => err[0] === "username")) {
-        const usernameMatch = await User.count({ username: req.body.username });
-        if (usernameMatch > 0) {
-            errors.push(["username", "Username is not available."]);
-        }
-    }
-
-    if (null == errors.find(err => err[0] === "email")) {
-        const emailMatch = await User.count({ email: req.body.email });
-        if (emailMatch > 0) {
-            errors.push(["email", "Email already registered."]);
-        }
-
-        const emailPattern = new RegExp("@\\w+\\.");
-        if (!emailPattern.test(req.body.email)) {
-            errors.push(["email", "Invalid email format."]);
-        }
-    }
-
-    if (null == errors.find(err => err[0] === "password")) {
-        if (req.body.password !== req.body.passwordConfirmation) {
-            errors.push(["password", "Passwords must match"]);
-        }
-
-        if (req.body.password.length < 8) {
-            errors.push(["password", "Password must be at least 8 characters"]);
-        }
-    }
-
-    if (errors.length > 0) {
+    if (null == repoResult.error) {
+        return res.redirect("/");
+    } else {
         return res.render("session/register", {
-            errors: errors,
+            errors: [repoResult.error],
             user: req.body
         });
     }
-
-    await user.save();
-
-    res.redirect("/");
 });
 
 router.post("/logout", (req, res) => {
