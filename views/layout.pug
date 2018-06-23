@@ -7,9 +7,28 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .container
-      if hasFlash
-        ul.flash-container
-          each val, key in flash
-            li= key + ": " + val
+      nav.navbar(role="navigation", aria-label="main navigation")
+        .navbar-brand
+          a.navbar-item(href="/") Identity Server
+          a.navbar-burger(role="button", aria-label="menu", aria-expanded="false", data-target="main-menu")
+            span(aria-hidden="true")
+            span(aria-hidden="true")
+            span(aria-hidden="true")
+        #main-menu.navbar-menu
+          if user
+            p.navbar-item Logged in as #{user.username}
+            form.navbar-item(action="/sessions/logout", method="POST")
+              input.button(type="submit", value="Log Out")
+          else
+            a.navbar-item(href="/sessions/register") Register
+            a.navbar-item(href="/sessions/login") Login
+    .section
+      .container
+        if hasFlash
+          ul.flash-container
+            each val, key in flash
+              li= key + ": " + val
 
-      block content
+        block content
+
+    script(src="/javascripts/style.js")

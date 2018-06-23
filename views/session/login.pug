@@ -1,14 +1,14 @@
 extends ../layout
 
 block content
-  h1 Log in
+  h1.title Log in
 
   form(action="/sessions/login", method="post")
-    div
-      label Username
-      input(type="text" name="username" autofocus)
-    div
-      label Password
-      input(type="password" name="password")
-    div
-      input(type="submit", value="Log In")
+    .field
+      label.label Username
+      input.input(type="text" name="username" autofocus)
+    .field
+      label.label Password
+      input.input(type="password" name="password")
+    .field
+      input.button(type="submit", value="Log In")

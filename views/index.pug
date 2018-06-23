@@ -3,15 +3,3 @@ extends layout
 block content
   h1.title Identity Server
   p.subtitle Single Sign-On
-
-  ul
-    if user
-      li Logged in as #{user.username}
-      li
-        form(action="/sessions/logout", method="POST")
-          input(type="submit", value="Log Out")
-    else
-      li
-        a(href="/sessions/login") Log In
-      li
-        a(href="/sessions/register") Register
