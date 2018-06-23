@@ -13,9 +13,12 @@ const strategy = new LocalStrategy({
         return done(null, false, { message: genericFailureMessage });
     }
 
-    if (!user.comparePassword(password)) {
+    const compareResult = await user.comparePassword(password);
+
+    if (!compareResult) {
         return done(null, false, { message: genericFailureMessage });
     }
+    console.log("Password success", password);
 
     return done(null, user);
 });
@@ -37,6 +40,6 @@ export const config = (passportInstance: PassportStatic) => {
 
 export const localAuth = passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/sessions/login",
     failureFlash: true
 });

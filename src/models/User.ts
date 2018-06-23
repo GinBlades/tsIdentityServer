@@ -1,5 +1,5 @@
 import mongoose, { Model, Document } from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt, { compare } from "bcryptjs";
 
 export interface IUserDocument extends Document {
     username: string,

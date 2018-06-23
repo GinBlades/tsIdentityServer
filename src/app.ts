@@ -55,6 +55,14 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  res.locals.flash = req.flash();
+  res.locals.hasFlash = Object.keys(res.locals.flash).length > 0;
+  console.log(res.locals.flash);
+  next();
+});
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/sessions", sessionRouter);
