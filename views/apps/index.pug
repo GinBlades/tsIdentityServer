@@ -1,4 +1,29 @@
 extends ../layout
 
 block content
-  h1.title Index
+  h1.title
+    | Apps
+    |
+    a.button(href="/apps/new") New App
+
+  table.table
+    thead
+      tr
+        th Name
+        th Paths
+        th Key
+        th
+    tbody
+      for app in apps
+        tr
+          td
+            a(href=`/apps/${app._id}`)= app.name
+          td
+            if app.paths
+              = app.paths.join(", ")
+          td= app.key
+          td
+            .field.has-addons
+              form(action=`/apps/${app._id}/delete`, method="POST")
+                a.button.is-small(href=`/apps/${app._id}/edit`) Edit
+                input.button.is-small(type="submit", value="Delete")

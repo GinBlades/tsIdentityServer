@@ -2,3 +2,8 @@ extends ../layout
 
 block content
   h1.title New
+
+  form(action="/apps", method="POST")
+    include ../shared/app-form-fields
+    .field
+      input.button(type="submit", value="Create")

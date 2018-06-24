@@ -49,21 +49,5 @@ UserSchema.static("hashPassword", async (password: string): Promise<string> => {
     return hashed;
 });
 
-const uniquePropValidation = function (model: Model<any>, prop: string, value: string, respond: Function) {
-    let queryObj: any = {};
-    queryObj[prop] = value;
-    return model.count(queryObj, (err: any, count: number) => {
-        if (err) {
-            respond(false);
-        }
-
-        if (count > 0) {
-            respond(false);
-        }
-
-        respond(true);
-    });
-}
-
 const User: IUserModel = mongoose.model<IUserDocument, IUserModel>("User", UserSchema);
 export default User;

@@ -1,4 +1,40 @@
 extends ../layout
 
 block content
-  h1.title Show
+  .columns
+    .column
+      h1.title= app.name
+      dl
+        dt Key
+        dd= app.key
+
+  .columns
+    .column
+      form(action=`/apps/${app._id}/path`, method="POST")
+        .field
+          label.label New Path
+          input.input(type="text", name="path", required)
+        .field
+          input.button(type="submit", value="Add Path")
+  if app.paths
+    .columns
+      .column
+        h2.subtitle Paths
+        table.table
+          for path in app.paths
+            tr
+              td
+                .columns
+                  .column
+                    = path
+                  .column
+                    form(action=`/apps/${app._id}/remove-path`, method="POST")
+                      input(type="hidden", name="path", value=path)
+                      input.button.is-small(type="submit", value="Remove")
+
+  .columns
+    .column
+      .field.has-addons
+        form(action=`/apps/${app._id}/delete`, method="POST")
+          a.button.is-small(href=`/apps/${app._id}/edit`) Edit
+          input.button.is-small(type="submit", value="Delete")

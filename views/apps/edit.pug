@@ -1,4 +1,9 @@
 extends ../layout
 
 block content
-  h1.title Edit
+  h1.title Editing #{app.name}
+
+  form(action=`/apps/${app._id}`, method="post")
+    include ../shared/app-form-fields
+    .field
+      input.button(type="submit", value="Update")

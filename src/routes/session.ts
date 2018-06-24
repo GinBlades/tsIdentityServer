@@ -22,7 +22,6 @@ router.get("/register", (req, res) => {
 
 router.post("/register", async (req, res) => {
     const repo = new UserRepository();
-    let errors = [];
 
     let user = repo.fromRequest(req);
     const repoResult = await repo.create(user, req.body.passwordConfirmation);

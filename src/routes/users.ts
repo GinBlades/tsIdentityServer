@@ -20,6 +20,19 @@ router.get("/new", function (req, res) {
 });
 
 router.post("/", async function (req, res) {
+    const repo = new UserRepository();
+    let user = repo.fromRequest(req);
+    const repoResult = await repo.create(user, req.body.passwordConfirmation);
+
+    if (null == repoResult.error) {
+        return res.redirect("/");
+    } else {
+        return res.render("users/new", {
+            errors: [repoResult.error],
+            user: req.body
+        });
+    }
+
     res.redirect("/users");
 });
 
