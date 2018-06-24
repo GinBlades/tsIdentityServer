@@ -7,10 +7,23 @@ export class UserRepository {
 
     fromRequest(req: Request) {
         let user = new User();
-        user.email = req.body.email;
-        user.username = req.body.username;
-        user.password = req.body.password;
+        for (let prop of ["email", "username", "password"]) {
+            if (null != req.body[prop]) {
+                user[prop] = req.body[prop];
+            }
+        }
         return user;
+    }
+
+    updateObj(req: Request) {
+        const user = this.fromRequest(req);
+        const obj: any = {};
+        for (let prop of ["email", "username", "password"]) {
+            if (null != user[prop]) {
+                obj[prop] = user[prop];
+            }
+        }
+        return obj;
     }
 
     async validate(user: IUserDocument): Promise<IRepoResponse> {

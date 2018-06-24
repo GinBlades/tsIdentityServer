@@ -2,10 +2,11 @@ import mongoose, { Model, Document } from "mongoose";
 import bcrypt, { compare } from "bcryptjs";
 
 export interface IUserDocument extends Document {
-    username: string,
-    email: string,
-    password: string,
-    comparePassword(password: string): boolean
+    username: string;
+    email: string;
+    password: string;
+    comparePassword(password: string): boolean;
+    [index: string]: any;
 }
 
 export interface IUserModel extends Model<IUserDocument> {

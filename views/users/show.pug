@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1.title= user.username
+  p.subtitle= user.email
+
+  .field.has-addons
+    form(action=`/users/${user._id}/delete`, method="POST")
+      a.button.is-small(href=`/users/${user._id}/edit`) Edit
+      input.button.is-small(type="submit", value="Delete")

@@ -15,13 +15,17 @@ html
             span(aria-hidden="true")
             span(aria-hidden="true")
         #main-menu.navbar-menu
-          if user
-            p.navbar-item Logged in as #{user.username}
-            form.navbar-item(action="/sessions/logout", method="POST")
-              input.button(type="submit", value="Log Out")
-          else
-            a.navbar-item(href="/sessions/register") Register
-            a.navbar-item(href="/sessions/login") Login
+          .navbar-start
+            a.navbar-item(href="/users") Users
+            a.navbar-item(href="/apps") Apps
+          .navbar-end
+            if currentUser
+              p.navbar-item Logged in as #{currentUser.username}
+              form.navbar-item(action="/sessions/logout", method="POST")
+                input.button(type="submit", value="Log Out")
+            else
+              a.navbar-item(href="/sessions/register") Register
+              a.navbar-item(href="/sessions/login") Login
     .section
       .container
         if hasFlash

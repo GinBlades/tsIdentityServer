@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  h1.title New User
+
+  form(action="/users", method="post")
+    include ../shared/new-user-fields
+    .field
+      input.button(type="submit", value="Create")

@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  h1.title
+    | Users
+    |
+    a.button(href="/users/new") New User
+
+  table.table
+    thead
+      tr
+        td Email
+        td Username
+        td
+    tbody
+      for user in users
+        tr
+          td
+            a(href=`/users/${user._id}`)= user.email
+          td= user.username
+          td
+            .field.has-addons
+              form(action=`/users/${user._id}/delete`, method="POST")
+                a.button.is-small(href=`/users/${user._id}/edit`) Edit
+                input.button.is-small(type="submit", value="Delete")

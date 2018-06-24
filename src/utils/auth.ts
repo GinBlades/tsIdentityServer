@@ -18,7 +18,6 @@ const strategy = new LocalStrategy({
     if (!compareResult) {
         return done(null, false, { message: genericFailureMessage });
     }
-    console.log("Password success", password);
 
     return done(null, user);
 });

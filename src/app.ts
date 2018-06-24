@@ -16,6 +16,7 @@ import {config as authConfig} from "./utils/auth";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
+import appsRouter from "./routes/apps";
 import sessionRouter from "./routes/session";
 
 mongoose.connect(secrets.mongoConn);
@@ -56,15 +57,15 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use((req, res, next) => {
-  res.locals.user = req.user;
+  res.locals.currentUser = req.user;
   res.locals.flash = req.flash();
   res.locals.hasFlash = Object.keys(res.locals.flash).length > 0;
-  console.log(res.locals.flash);
   next();
 });
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/apps", appsRouter);
 app.use("/sessions", sessionRouter);
 
 // catch 404 and forward to error handler
