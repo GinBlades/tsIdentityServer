@@ -18,6 +18,7 @@ import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import appsRouter from "./routes/apps";
 import sessionRouter from "./routes/session";
+import authRouter from "./routes/auth";
 
 mongoose.connect(secrets.mongoConn);
 
@@ -67,6 +68,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/apps", appsRouter);
 app.use("/sessions", sessionRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

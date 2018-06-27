@@ -1,10 +1,16 @@
 import mongoose, { Model, Document } from "mongoose";
 import { randomBytes } from "crypto";
 
+interface IToken {
+    issued: number;
+    code: string;
+}
+
 export interface IAppDocument extends Document {
     name: string;
     paths: string[];
     key: string;
+    tokens: IToken[];
     [index: string]: any;
 }
 
@@ -21,7 +27,11 @@ let AppSchema = new mongoose.Schema({
     key: {
         type: String,
         required: true
-    }
+    },
+    tokens: [{
+        issued: Number,
+        code: String
+    }]
 });
 
 AppSchema.static("keygen", (): string => {
