@@ -1,10 +1,6 @@
 import mongoose, { Model, Document } from "mongoose";
 import { randomBytes } from "crypto";
-
-interface IToken {
-    issued: number;
-    code: string;
-}
+import { tokenArraySchema, IToken } from "./shared";
 
 export interface IAppDocument extends Document {
     name: string;
@@ -28,10 +24,7 @@ let AppSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tokens: [{
-        issued: Number,
-        code: String
-    }]
+    tokens: tokenArraySchema
 });
 
 AppSchema.static("keygen", (): string => {

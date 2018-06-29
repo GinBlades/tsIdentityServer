@@ -1,17 +1,20 @@
 import mongoose, { Model, Document } from "mongoose";
 import bcrypt, { compare } from "bcryptjs";
+import { tokenArraySchema, IToken } from "./shared";
 
 export interface IUserDocument extends Document {
     username: string;
     email: string;
     password: string;
     comparePassword(password: string): boolean;
+    tokens: IToken[];
     [index: string]: any;
 }
 
 export interface IUserModel extends Model<IUserDocument> {
     hashPassword(password: string): string;
 }
+
 
 let UserSchema = new mongoose.Schema({
     username: {
@@ -27,7 +30,8 @@ let UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    tokens: tokenArraySchema
 });
 
 // TODO: Hash and proper validation of password

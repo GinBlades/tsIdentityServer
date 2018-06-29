@@ -1,11 +1,32 @@
 import express from "express";
 import { localAuth } from "../utils/auth";
-import User from "../models/User";
+import User, { IUserDocument } from "../models/User";
 import { UserRepository } from "../repositories/userRepository";
+import App from "../models/App";
 
 const router = express.Router();
 
-router.get("/login", (req, res) => {
+async function remoteLogin(code: string, user: IUserDocument) {
+    const app = await App.find({"tokens.code": code});
+    const token = App.keygen();
+    await User.findByIdAndUpdate(user._id, {
+        $push: {
+            tokens: {
+                issued: new Date().getTime(),
+                used: false,
+                code: token
+            }
+        }
+    });
+    return token;
+}
+
+router.get("/login", async (req, res) => {
+    if (req.query.code && req.isAuthenticated) {
+        // TODO: Confirm redirect is valid.
+        const token = await remoteLogin(req.query.code, <IUserDocument>req.user);
+        return res.redirect(`${req.query.return_to}/sessions/auth?token=${token}`);
+    }
     res.render("session/login");
 });
 
